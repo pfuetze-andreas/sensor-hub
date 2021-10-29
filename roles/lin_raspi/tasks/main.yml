@@ -1,0 +1,34 @@
+---
+
+- name: deactivate swap
+  command: swapoff -a
+
+
+- name: disable swap in sysctl
+  sysctl:
+    name: vm.swappiness
+    value: "0"
+
+
+- name: remove swap from fstab
+  mount:
+    path: swap
+    state: absent
+
+
+- name: disable and mask not used raspi services
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+    masked: yes
+    enabled: no
+    daemon_reload: yes
+  loop:
+    - alsa-state
+    - avahi-daemon
+    - bluetooth
+    - dphys-swapfile
+    - hciuart
+    - triggerhappy
+    - wpa_supplicant
+  become: true

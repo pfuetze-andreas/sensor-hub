@@ -1,0 +1,62 @@
+---
+
+# - name: import the influxdb apt key
+#   apt_key:
+#     url: https://repos.influxdata.com/influxdb.key
+#     state: present
+#   become: true
+
+# - name: install influxdb deb repository
+#   apt_repository:
+#     repo: deb https://repos.influxdata.com/debian stretch stable
+#     state: present
+#   become: true
+
+# - name: install influxdb and telgraf
+#   apt:
+#     name: "{{ item }}"
+#     state: present
+#     update_cache: true
+#   loop:
+#     - influxdb=1.8.9-1
+#     - telegraf=1.20.0-1
+#   become: true
+
+# - name: Copy Influxdb Configration File
+#   copy:
+#     src: influxdb.conf
+#     dest: /etc/influxdb/
+#     owner: pi
+#     group: pi
+# 
+
+# - name: start influxdb service
+#   systemd:
+#     name: influxdb
+#     state: restarted
+#     enabled: yes
+#     daemon_reload: yes
+# 
+
+- name: Copy Telegraf Configration File
+  copy:
+    src: telegraf.conf
+    dest: /etc/telegraf/
+    owner: pi
+    group: pi
+
+
+- name: Copy MQTT Configration File
+  copy:
+    src: mqtt.conf
+    dest: /etc/telegraf/telegraf.d/
+    owner: pi
+    group: pi
+
+
+- name: start telegraf service
+  systemd:
+    name: telegraf
+    state: restarted
+    enabled: yes
+    daemon_reload: yes

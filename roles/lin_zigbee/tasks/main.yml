@@ -1,0 +1,72 @@
+---
+
+- name: ensure node js v10.24.0 installed
+  apt: 
+    name: nodejs=10.24.0*
+    state: present
+    update_cache: yes
+
+
+- name: ensure npm v5.8.0  installed
+  apt: 
+    name: npm=5.8.0*
+    state: present
+    update_cache: yes
+
+
+- name: Downlowd Zigbee2MQTT
+  ansible.builtin.unarchive:
+    src: https://github.com/Koenkk/zigbee2mqtt/archive/refs/tags/1.21.1.zip
+    dest: /opt
+    creates: '/opt/zigbee2mqtt-1.21.1'
+    remote_src: yes
+
+
+- name: Set file system owner recursively
+  file:
+    path: '/opt/zigbee2mqtt-1.21.1'
+    owner: pi
+    group: pi
+    state: directory
+    recurse: yes
+
+
+- name: Create symlink
+  file:
+    src: '/opt/zigbee2mqtt-1.21.1'
+    dest: /opt/zigbee2mqtt
+    owner: pi
+    group: pi
+    state: link
+
+
+- name: install dependencies
+  npm:
+    path: /opt/zigbee2mqtt
+    production: yes
+    unsafe_perm: yes
+    ci: yes
+
+- name: Copy Service File
+  copy:
+    src: zigbee2mqtt.service
+    dest: /etc/systemd/system/
+    owner: root
+    group: root
+
+
+- name: Copy Configration File
+  copy:
+    src: configuration.yaml
+    dest: /opt/zigbee2mqtt/data/
+    owner: pi
+    group: pi
+
+
+
+- name: restart systemd zigbee2mqtt service
+  systemd:
+    name: zigbee2mqtt
+    state: restarted
+    enabled: yes
+    daemon_reload: yes

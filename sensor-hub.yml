@@ -1,0 +1,10 @@
+---
+- name: Configure Sensor-Hub
+  hosts: all
+  gather_facts: no
+  roles:
+    - lin_raspi
+    - lin_mosquitto
+    - lin_zigbee
+    - lin_influxdb
+    - lin_grafana

@@ -1,0 +1,13 @@
+---
+
+- name: Install a grafana .deb package 
+  apt:
+    deb: https://dl.grafana.com/oss/release/grafana-rpi_7.0.0_armhf.deb
+
+
+- name: start grafana service
+  systemd:
+    name: grafana-server
+    state: restarted
+    enabled: yes
+    daemon_reload: yes

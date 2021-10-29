@@ -1,0 +1,29 @@
+---
+
+- name: ensure java runtime is installed
+  apt: 
+    name: openjdk-8-jre=8u212*
+    state: present
+    update_cache: yes
+
+
+- name: ensure mosquitto is installed
+  apt: 
+    name: mosquitto=1.5.7*
+    state: present
+    update_cache: yes
+
+
+- name: ensure mosquitto-clients is installed
+  apt: 
+    name: mosquitto-clients=1.5.7*
+    state: present
+    update_cache: yes
+
+
+- name: start mosquitto service
+  systemd:
+    name: mosquitto
+    state: restarted
+    enabled: yes
+    daemon_reload: yes

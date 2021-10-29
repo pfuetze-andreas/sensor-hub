@@ -1,0 +1,6 @@
+CREATE USER telegraf_user WITH PASSWORD 'telegraf_password'
+
+GRANT ALL ON telegraf TO telegraf_user
+
+CREATE RETENTION POLICY "Forever" ON "telegraf" DURATION 3650d REPLICATION 1
+CREATE RETENTION POLICY "OneWeek" ON "telegraf" DURATION 7d REPLICATION 1 DEFAULT
